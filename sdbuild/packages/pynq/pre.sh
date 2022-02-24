@@ -46,6 +46,12 @@ if [ -n "$PYNQ_SDIST" ] && [ "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
 	
 	# nothing to do except copy sdist to target folder
 	sudo cp ${PYNQ_SDIST} $target/home/xilinx/pynq_git/dist
+
+	# sdist does not get generated in this instance
+        # makefile expects *.tar.gz in PYNQ/dist folder
+        mkdir $BUILD_ROOT/PYNQ/dist
+        sudo cp -p ${PYNQ_SDIST} $BUILD_ROOT/PYNQ/dist
+
 elif [ -n "$PYNQ_SDIST" ] && [ ! "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
 	echo "Using prebuilt sdist and external board"
 
@@ -65,6 +71,14 @@ elif [ -n "$PYNQ_SDIST" ] && [ ! "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
 		done
 	done
 	rm -rf ${sdist_untar}
+
+	# copy sdist to target folder, because it's not going to be built
+	sudo cp ${PYNQ_SDIST} $target/home/xilinx/pynq_git/dist
+
+        # makefile expects *.tar.gz in PYNQ/dist folder
+        mkdir $BUILD_ROOT/PYNQ/dist
+        sudo cp -p ${PYNQ_SDIST} $BUILD_ROOT/PYNQ/dist
+
 else
 	echo "Not using prebuilt sdist"
 	# build bitstream, microblazes' bsps and binaries
