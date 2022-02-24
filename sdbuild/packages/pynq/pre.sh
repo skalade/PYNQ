@@ -42,29 +42,31 @@ if [ -d /usr/local/share/fatfs_contents ]; then
 fi
 
 if [ -n "$PYNQ_SDIST" ] && [ "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
-	# using prebuilt sdist with non-external board
+	echo "Using prebuilt sdist and internal board"
+	
 	# nothing to do except copy sdist to target folder
 	sudo cp ${PYNQ_SDIST} $target/home/xilinx/pynq_git/dist
-else
-	if [ -n "$PYNQ_SDIST" ] && [ ! "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
-		# using prebuilt sdist with external board
-		# copy bitstreams, microblaze bsps and binaries from sdist
-		sdist_untar=$BUILD_ROOT/PYNQ/sdist_untar
-		mkdir -p ${sdist_untar}
-		tar -xzvf ${PYNQ_SDIST} -C ${sdist_untar}
-		cd $BUILD_ROOT/PYNQ
-		rsync -rptL --ignore-existing ${sdist_untar}/*/pynq/lib/* pynq/lib/
-		boards=`ls ${sdist_untar}/*/boards`
-		for bd_name in $boards ; do
-			cd ${sdist_untar}/*/boards/${bd_name}
-			overlays=`find . -maxdepth 2 -iname '*.bit' -printf '%h\n' | cut -f2 -d"/"`
-			for ol in $overlays ; do
-				sudo cp -fL $ol/*.bit $ol/*.hwh \
-					$BUILD_ROOT/PYNQ/boards/${bd_name}/$ol 2>/dev/null||:
-			done
+elif [ -n "$PYNQ_SDIST" ] && [ ! "$BOARDDIR" -ef "$DEFAULT_BOARDDIR" ]; then
+	echo "Using prebuilt sdist and external board"
+
+	# copy bitstreams, microblaze bsps and binaries from sdist
+	sdist_untar=$BUILD_ROOT/PYNQ/sdist_untar
+	mkdir -p ${sdist_untar}
+	tar -xzvf ${PYNQ_SDIST} -C ${sdist_untar}
+	cd $BUILD_ROOT/PYNQ
+	rsync -rptL --ignore-existing ${sdist_untar}/*/pynq/lib/* pynq/lib/
+	boards=`ls ${sdist_untar}/*/boards`
+	for bd_name in $boards ; do
+		cd ${sdist_untar}/*/boards/${bd_name}
+		overlays=`find . -maxdepth 2 -iname '*.bit' -printf '%h\n' | cut -f2 -d"/"`
+		for ol in $overlays ; do
+			sudo cp -fL $ol/*.bit $ol/*.hwh \
+				$BUILD_ROOT/PYNQ/boards/${bd_name}/$ol 2>/dev/null||:
 		done
-		rm -rf ${sdist_untar}
-	fi
+	done
+	rm -rf ${sdist_untar}
+else
+	echo "Not using prebuilt sdist"
 	# build bitstream, microblazes' bsps and binaries
 	cd $BUILD_ROOT/PYNQ
 	./build.sh
