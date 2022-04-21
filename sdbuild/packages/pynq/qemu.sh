@@ -22,7 +22,10 @@ cd ..
 old_hostname=$(hostname)
 pynq_hostname.sh
 hostname $old_hostname
+
+# Remove temporary jupyter_notebooks folders and extra user home folders
 rm -rf jupyter_notebooks_*
+for user in /home/*; do if [[ ! $user =~ "xilinx" ]]; then rm -rf $user; fi; done
 
 cd /root
 
