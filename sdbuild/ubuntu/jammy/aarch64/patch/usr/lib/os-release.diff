@@ -23,4 +23,4 @@
 +BUG_REPORT_URL="https://www.pynq.io"
 +PRIVACY_POLICY_URL="https://www.pynq.io"
 +VERSION_CODENAME=Austin
- UBUNTU_CODENAME=focal
+ UBUNTU_CODENAME=jammy
