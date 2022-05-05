@@ -1,7 +1,7 @@
 DEFAULT_BOARDDIR := $(CURDIR)/../boards
 BOARDDIR ?= $(DEFAULT_BOARDDIR)
 BOARDS ?= $(basename $(notdir $(wildcard $(BOARDDIR)/*/*.spec)))
-UBUNTU_RELEASE := focal
+UBUNTU_RELEASE := jammy
 VERSION := 2.7.0
 
 KERNEL_VERSION := 2020.2
