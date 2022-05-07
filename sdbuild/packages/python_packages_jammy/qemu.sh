@@ -78,7 +78,6 @@ patsy==0.5.1
 pbr==5.6.0
 pexpect==4.8.0
 pip==21.2.1
-pkg_resources==0.0.0
 plotly==5.1.0
 prometheus-client==0.10.1
 prompt-toolkit==3.0.18
