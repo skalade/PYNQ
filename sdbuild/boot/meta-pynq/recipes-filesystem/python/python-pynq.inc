@@ -35,7 +35,7 @@ SRC_URI = "gitsm://${THISDIR}/../../../../../;usehead=1;protocol=file"
 SRCREV = "${AUTOREV}"
 
 SRC_URI += " file://pl_server_init"
-FILESEXTRAPATHS_prepend := "${THISDIR}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}:"
 S = "${WORKDIR}/git"
 INSANE_SKIP_${PN} = "staticdev"
 BBCLASSEXTEND = "native nativesdk"
@@ -45,7 +45,7 @@ INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME = "pl_server_init"
 INITSCRIPT_PARAMS = "start 99 S ."
 
-do_compile_prepend() {
+do_compile:prepend() {
 install -d "${D}/home/root/notebooks"
 export PYNQ_JUPYTER_NOTEBOOKS="${D}/home/root/notebooks"
 export PYNQ_BUILD_ARCH="${PYNQ_ARCH_${TARGET_ARCH}}"
@@ -54,14 +54,14 @@ export PYNQ_BUILD_ROOT="${STAGING_DIR_TARGET}"
 
 }
 
-do_install_prepend() {
+do_install:prepend() {
 install -d "${D}/home/root/notebooks"
 export PYNQ_JUPYTER_NOTEBOOKS="${D}/home/root/notebooks"
 export PYNQ_BUILD_ARCH="${PYNQ_ARCH_${TARGET_ARCH}}"
 export PYNQ_BUILD_ROOT="${STAGING_DIR_TARGET}"
 }
 
-do_install_append() {
+do_install:append() {
  install -d ${D}${INIT_D_DIR}
  install -m 755 ${WORKDIR}/pl_server_init ${D}${INIT_D_DIR}/pl_server_init
  (cd ${S}/sdbuild/packages/libsds/libcma && CMA_ARCH=${CMA_ARCH_${TARGET_ARCH}} make install DESTDIR=${D})
