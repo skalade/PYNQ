@@ -2,10 +2,10 @@ DEFAULT_BOARDDIR := $(CURDIR)/../boards
 BOARDDIR ?= $(DEFAULT_BOARDDIR)
 BOARDS ?= $(basename $(notdir $(wildcard $(BOARDDIR)/*/*.spec)))
 UBUNTU_RELEASE := jammy
-VERSION := 2.7.0
+VERSION := 2.8.0
 
-KERNEL_VERSION := 2020.2
-LINUX_VERSION := 5.4.0-xilinx-v2020.2
+KERNEL_VERSION := 2022.1
+LINUX_VERSION := 5.15.19-xilinx-v2022.1
 QEMU_VERSION := 5.2.0
 SCRIPT_DIR := $(CURDIR)/scripts
 SHELL := /bin/bash
@@ -167,9 +167,7 @@ $$(BOOT_ROOT_$1)/image.ub : $$(BUILD_ROOT_$1)/image.its $$(BUILD_ROOT_$1)/system
 	cd $$(BOOT_ROOT_$1) && mkimage -f $$(BUILD_ROOT_$1)/image.its $$@
 
 $$(BOOT_ROOT_$1)/boot.scr : $$(BOOT_DEPENDS_$1) | $$(BOOT_ROOT_$1)
-	mkimage -c none -A arm -T script -d \
-		$$(PL_PROJ_$1)/project-spec/meta-user/recipes-bsp/u-boot/u-boot-zynq-scr/boot.cmd.default \
-		$$(PL_PROJ_$1)/images/linux/boot.scr && \
+	$$(PL_ENV_$1) petalinux-build -c u-boot-zynq-scr -p $$(PL_PROJ_$1)
 	cp -f $$(PL_PROJ_$1)/images/linux/boot.scr $$@
 
 $$(BUILD_ROOT_$1)/image.its: $$(CURDIR)/boot/image_$$(ARCH_$1).its | $$(BUILD_ROOT_$1)
@@ -229,7 +227,7 @@ $$(ROOT_$1) : $$(BASE_PATH_$1) $$(STAGE4_DEPENDS_$1) $$(MODULES_$1) $$(KERNEL_RP
 	$$(PACKAGE_ENV_$1) $$(SCRIPT_DIR)/install_packages.sh $$(STAGING_$1) $$(STAGE4_PACKAGES_$1)
 	mkdir -p $$(BUILD_ROOT_$1)/modules
 	cd $$(BUILD_ROOT_$1)/modules && tar -xf $$(MODULES_$1)
-	sudo cp -r --no-preserve=ownership $$(BUILD_ROOT_$1)/modules/* $$(STAGING_$1)
+	sudo cp -r --no-preserve=ownership $$(BUILD_ROOT_$1)/modules/lib/* $$(STAGING_$1)
 	rm -rf $$(BUILD_ROOT_$1)/modules
 	sudo mount -o bind /dev $$(STAGING_$1)/dev
 	rpm2cpio $$(KERNEL_RPM_$1) | sudo chroot $$(STAGING_$1) cpio -id
@@ -358,8 +356,8 @@ ALL_PACKAGES := $(sort $(foreach board, $(BOARDS), $(value STAGE3_PACKAGES_$(boa
 PACKAGE_CLEAN := $(patsubst %,PACKAGE_CLEAN_%, $(ALL_PACKAGES))
 
 checkenv: $(patsubst %, qemu_check_%, $(USED_ARCH))
-	vivado -version | fgrep ${KERNEL_VERSION}
-	vitis -version | fgrep ${KERNEL_VERSION}
+	#vivado -version | fgrep ${KERNEL_VERSION}
+	#vitis -version | fgrep ${KERNEL_VERSION}
 	which petalinux-config
 	which arm-linux-gnueabihf-gcc
 	which microblaze-xilinx-elf-gcc
