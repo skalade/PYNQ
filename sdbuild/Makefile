@@ -226,8 +226,8 @@ $$(ROOT_$1) : $$(BASE_PATH_$1) $$(STAGE4_DEPENDS_$1) $$(MODULES_$1) $$(KERNEL_RP
 	(cd $$(STAGING_$1) && sudo tar -xf $$(realpath $$<))
 	$$(PACKAGE_ENV_$1) $$(SCRIPT_DIR)/install_packages.sh $$(STAGING_$1) $$(STAGE4_PACKAGES_$1)
 	mkdir -p $$(BUILD_ROOT_$1)/modules
-	cd $$(BUILD_ROOT_$1)/modules && tar -xf $$(MODULES_$1)
-	sudo cp -r --no-preserve=ownership $$(BUILD_ROOT_$1)/modules/lib/* $$(STAGING_$1)
+	cd $$(BUILD_ROOT_$1)/modules && tar -xf $$(MODULES_$1)	
+	sudo cp -r --no-preserve=ownership $$(BUILD_ROOT_$1)/modules/lib/* $$(STAGING_$1)/usr/lib/
 	rm -rf $$(BUILD_ROOT_$1)/modules
 	sudo mount -o bind /dev $$(STAGING_$1)/dev
 	rpm2cpio $$(KERNEL_RPM_$1) | sudo chroot $$(STAGING_$1) cpio -id
