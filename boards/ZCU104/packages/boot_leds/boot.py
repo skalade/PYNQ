@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.8
+#!/usr/local/share/pynq-venv/bin/python
 
 from pynq import Overlay
 from time import sleep
