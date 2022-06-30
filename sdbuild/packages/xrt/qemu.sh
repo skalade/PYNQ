@@ -1,16 +1,12 @@
-# Set up some environment variables as /etc/environment
-# isn't sourced in chroot
-
 set -e
 set -x
 
-
-# build and install xrt
+# build and install
 cd /root
 mkdir xrt-git
 git clone https://github.com/Xilinx/XRT xrt-git
 cd xrt-git
-git checkout 8de6bc04f7060c8272cbb7857531335f1aa31099
+git checkout -b temp tags/202210.2.13.466
 
 cd build
 chmod 755 build.sh
@@ -34,4 +30,3 @@ echo ${PYNQ_BOARD} > /etc/xocl.txt
 # cleanup
 cd /root
 rm -rf xrt-git
-
