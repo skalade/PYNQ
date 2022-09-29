@@ -109,8 +109,8 @@ def test_pynq_overlay(tmpdir, device, monkeypatch):
                                 os.path.splitext(BITSTREAM_FILE)[0])
     os.mkdir(overlay_path)
     create_file(os.path.join(overlay_path, BITSTREAM_FILE), BITSTREAM_DATA)
-    set_pynq_path(os.path.join(pynqdir, 'overlays'), monkeypatch)
-    bs = pynq.Bitstream(BITSTREAM_FILE, device=device)
+    #set_pynq_path(os.path.join(pynqdir, 'overlays'), monkeypatch)
+    bs = pynq.Bitstream(os.path.join(overlay_path,BITSTREAM_FILE), device=device)
     assert bs.bitfile_name == os.path.join(overlay_path, BITSTREAM_FILE)
 
 
