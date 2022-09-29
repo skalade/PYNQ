@@ -8,6 +8,7 @@ import warnings
 import pynqutils
 
 from .devicetree import get_dtbo_path
+from pynqutils.setup_utils import ExtensionsManager
 
 OVERLAYS_GROUP = "pynq.overlays"
 
@@ -100,7 +101,7 @@ class Bitstream:
             bitfile_abs = _resolve_bitstream(bitfile_name, device)
         else:
             bitfile_abs = _resolve_bitstream(os.path.abspath(bitfile_name), device)
-            overlays_ext_man = pynqutils.setup_utils.ExtensionsManager(OVERLAYS_GROUP)
+            overlays_ext_man = ExtensionsManager(OVERLAYS_GROUP)
             paths = [overlays_ext_man.extension_path(OVERLAYS_GROUP)]
             paths += overlays_ext_man.paths
             for path in paths:
