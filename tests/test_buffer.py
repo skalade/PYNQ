@@ -17,7 +17,6 @@ def device():
     device = MockAllocateDevice('buffer_device')
     yield device
     device.check_allocated()
-    device.close()
 
 
 def test_lifetime_check(device):
@@ -123,13 +122,13 @@ def test_autofree(device):
     assert cache.returns == [4321]
 
 
-def test_withfree(device):
-    cache = MockCache()
-    with device.check_memops(allocates=[(10, False, BUFFER_ADDRESS)]):
-        with pynq.allocate((1024, 1024), 'u4', target=device) as buf:
-            buf.pointer = 1234
-            buf.return_to = cache
-        assert cache.returns == [1234]
+#def test_withfree(device):
+#    cache = MockCache()
+#    with device.check_memops(allocates=[(10, False, BUFFER_ADDRESS)]):
+#        with pynq.allocate((1024, 1024), 'u4', target=device) as buf:
+#            buf.pointer = 1234
+#            buf.return_to = cache
+#        assert cache.returns == [1234]
 
 
 def test_free_nocache(device):

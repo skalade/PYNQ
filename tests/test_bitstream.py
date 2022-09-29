@@ -31,7 +31,6 @@ def set_pynq_path(path, monkeypatch, extra_paths=[]):
 def device():
     device = MockDownloadableDevice('testcase')
     yield device
-    device.close()
 
 
 @pytest.fixture(params=DEVICE_NAMES)
@@ -39,7 +38,6 @@ def named_device(request):
     device = MockDownloadableDevice('testcase-named')
     device.name = request.param
     yield device
-    device.close()
 
 
 def test_relative(tmpdir, device):
