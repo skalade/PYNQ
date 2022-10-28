@@ -6,7 +6,8 @@ cd /root
 mkdir xrt-git
 git clone https://github.com/Xilinx/XRT xrt-git
 cd xrt-git
-git checkout -b temp tags/202210.2.13.466
+#git checkout -b temp tags/202210.2.13.466
+git checkout -b temp tags/202120.2.12.447
 
 # An incorrect format specifier causes a crash on armhf
 sed -i 's:%ld bytes):%lld bytes):' src/runtime_src/tools/xclbinutil/XclBinClass.cxx
